@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: python-deployment
+  labels:
+    app: python
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: python
+  template:
+    metadata:
+      labels:
+        app: python
+        azure.workload.identity/use: "true"
+    spec:
+      serviceAccountName: SERVICE_ACCOUNT_NAME
+      containers:
+      - name: python
+        image: sufuf3/kvpython:latest
+        ports:
+        - containerPort: 80
+        env:
+        - name: KEYVAULT_URL
+          value: https://sjkvtw.vault.azure.net/
+        - name: SECRET_NAME
+          value: mysecret
+        imagePullPolicy: Always
