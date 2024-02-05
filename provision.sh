@@ -10,7 +10,7 @@ export AKS_NAME="kvaks"
 
 # Create AKS cluster
 az group create -l "${LOCATION}" -n "${RESOURCE_GROUP}"
-az aks create -g "${RESOURCE_GROUP}" -n "${AKS_NAME}" --enable-oidc-issuer --enable-workload-identity --generate-ssh-keys --node-vm-size Standard_B2s --node-count 1
+az aks create -g "${RESOURCE_GROUP}" -n "${AKS_NAME}" --addons azure-keyvault-secrets-provider --enable-oidc-issuer --enable-workload-identity --generate-ssh-keys --node-vm-size Standard_B2s --node-count 1
 
 # Retrieve the OIDC Issuer URL
 export AKS_OIDC_ISSUER="$(az aks show -n "${AKS_NAME}" -g "${RESOURCE_GROUP}" --query "oidcIssuerProfile.issuerUrl" -o tsv)"
