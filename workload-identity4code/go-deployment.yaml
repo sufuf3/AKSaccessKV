@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: go-deployment
+  labels:
+    app: go
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: go
+  template:
+    metadata:
+      labels:
+        app: go
+        azure.workload.identity/use: "true"
+    spec:
+      serviceAccountName: SERVICE_ACCOUNT_NAME
+      containers:
+      - name: go
+        image: sufuf3/kvgo:latest
+        env:
+        - name: KEYVAULT_URL
+          value: https://sjkvtw.vault.azure.net/
+        - name: SECRET_NAME
+          value: mysecret
+        command: ["/bin/tail"]
+        args: ["-f", "/etc/passwd"]
+        imagePullPolicy: Always
