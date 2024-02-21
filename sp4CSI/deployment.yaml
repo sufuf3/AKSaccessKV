@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: busybox-secrets-store-sp
+  labels:
+    app: secrets-sp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: secrets-sp
+  template:
+    metadata:
+      labels:
+        app: secrets-sp
+    spec:
+      containers:
+      - name: secrets-sp
+        image: registry.k8s.io/e2e-test-images/busybox:1.29-4
+        command: ["/bin/tail"]
+        args: ["-f", "/etc/passwd"]
+        volumeMounts:
+        - name: secrets-store01-inline
+          mountPath: "/mnt/secrets-store"
+          readOnly: true
+        imagePullPolicy: Always
+      volumes:
+        - name: secrets-store01-inline
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: "azure-kvname-sp"
+            nodePublishSecretRef:                       # Only required when using service principal mode
+              name: secrets-store-creds                 # Only required when using service principal mode. The name of the Kubernetes secret that contains the service principal credentials to access keyvault.
