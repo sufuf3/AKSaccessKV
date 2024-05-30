@@ -10,6 +10,7 @@
 2. grants the workload identity permission to access the key vault secrets
   - Check Key Vault's Access configuration
   <img width="274" alt="image" src="https://github.com/sufuf3/AKSaccessKV/assets/8349587/66428134-9f03-4f70-962d-2fce2a6791e2">
+
   - If Key Vault’s data plane access by using an Azure RBAC
     ```
     az role assignment create --role "Key Vault Administrator" --assignee $USER_ASSIGNED_CLIENT_ID --scope $KEYVAULT_SCOPE
